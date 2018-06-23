@@ -1,0 +1,101 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>无标题文档</title>
+    <link href="{:config('admin_static')}/css/style.css" rel="stylesheet" type="text/css" />
+    <script language="JavaScript" src="{:config('admin_static')}/js/jquery.js"></script>
+    <style>
+        .active{
+            border-bottom: solid 3px #66c9f3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="place">
+        <span>位置：</span>
+        <ul class="placeul">
+            <li><a href="#">首页</a></li>
+            <li><a href="#">表单</a></li>
+        </ul>
+    </div>
+    <div class="formbody">
+        <div class="formtitle">
+            <span class="active">基本信息</span>
+
+        </div>
+        <form action="" method="post">
+            <input type="hidden" name="auth_id" value="{$data['auth_id']}">
+            <ul class="forminfo">
+                <li>
+                    <label>权限名称</label>
+                    <input name="auth_name" value="{$data['auth_name']}" placeholder="请输入权限名称" type="text" class="dfinput" />
+                </li>
+                 <li>
+                    <label>父权限</label>
+                    <select name='pid' class="dfinput">
+                        <option value='0'>顶级权限</option>
+                        {volist name="auths" id='auth'}
+                            <option pid="{$auth['pid']}" value='{$auth["auth_id"]}'>{:str_repeat('&nbsp;&nbsp;',$auth['deep']*3)}{$auth["auth_name"]}</option>
+                        {/volist}
+                    </select>
+                </li>
+                <li>
+                    <label>控制器名：</label>
+                    <input name="auth_c" value="{$data['auth_c']}" placeholder="请输入控制器名" type="text" class="dfinput" /><i></i>
+                </li>
+                 <li>
+                    <label>控制器方法名：</label>
+                    <input name="auth_a" value="{$data['auth_a']}" placeholder="请输入控制器方法名" type="text" class="dfinput" /><i></i>
+                </li>
+            </ul>
+			<li>
+                    <label>&nbsp;</label>
+                    <input name="" id="btnSubmit" type="submit" class="btn" value="确认保存" />
+             </li>
+        </form>
+    </div>
+</body>
+<script>
+    //默认选中父级权限
+    $("select[name='pid']").val("{$data['pid']}");
+    //给select元素name=pid绑定onchange事件
+    $("select[name='pid']").change(function(){
+        var pid = $(this).val();
+        if(pid == 0 ){
+            //说明是顶级全选（1级）
+            //把控制器名和操作名的input框设置为
+            $("input[name='auth_c'],input[name='auth_a']").prop('readonly',true).val('');
+        }else{
+            //非顶级就可用，可以输入控制器名和方法名
+            $("input[name='auth_c'],input[name='auth_a']").prop('readonly',false);
+        }
+    });
+    //页面加载后，让上面的元素自执行change事件
+    $("select[name='pid']").change();
+
+    //把当前权限的对应的option标签给remove删除
+    $("select[name='pid'] > option[value="+ {$data['auth_id']} +"]").remove();
+    //获取到所有的数据源，在所有的option中找
+    var options = $("select[name='pid'] > option ");
+    //递归找到当前对应的auth_id的子孙权限
+    function findAuthSons(options,auth_id){
+        //  {$data['auth_id']}   3 
+        //判断option的pid属性值等于上面auth_id的值，说明找到了其子权限
+        $.each(options,function(v){
+            if($(this).attr('pid') == auth_id){
+                $(this).remove(); //删除optio标签
+                //递归调用
+                findAuthSons(options,$(this).val())
+            }
+        });
+    }
+
+    findAuthSons(options,"{$data['auth_id']}");
+
+    
+</script>
+
+</html>
