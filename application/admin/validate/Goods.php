@@ -23,5 +23,6 @@ class Goods extends Validate{
 	//定义验证的场景
 	protected $scene = [
 		'add' => ['goods_name','goods_price','goods_number','cat_id'],
+		'upd' => ['goods_name','goods_price','goods_number','cat_id']
 	];
 }

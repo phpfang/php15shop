@@ -79,6 +79,7 @@
                     <td>{$list['is_hot'] == 1?'是':'否'}</td>
                     <td>
                         <a href="javascript:;" goods_id = "{$list['goods_id']}" class="showContent tablelink">查看商品详情</a> 
+                        <a href="{:url('admin/goods/upd',['goods_id'=>$list['goods_id']])}"  class="tablelink">编辑</a> 
                         <a href="javascript:;" attr_id="{$list['goods_id']}" class="delAttr tablelink">加入回收站</a>
                     </td>
                 </tr>
@@ -112,7 +113,6 @@
             var goods_id = $(this).attr('goods_id');
             $.get("{:url('admin/goods/ajaxGetContent')}", {"goods_id":goods_id}, function(json){
                 console.log(json);
-                //alert(json.goods_desc);
                 //页面层
                 layer.open({
                   title:json.goods.goods_name,

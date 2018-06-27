@@ -50,6 +50,47 @@ class Goods extends Model{
 				}
 			}
 		});
+
+		//编辑的后钩子
+		Goods::event('after_update',function($goods){
+			//$goods入库成功后的对象
+			$postData = input('post.');
+			$goodsAttrValue = $postData['goodsAttrValue']; //获取提交过来的属性值
+			$goodsAttrPrice = $postData['goodsAttrPrice'];//获取提交过来的属性价格
+			//halt($postData);
+			$goods_id = $goods['goods_id']; //获取商品入库成功后的主键goods_id
+			Db::name('goods_attr')->where('goods_id',$goods_id)->delete();
+			//把商品值和价格入库到商品属性表sh_goods_attr中
+			foreach($goodsAttrValue as $attr_id=>$attr_values){
+				//如果属性值$attr_values是一个数组，说明是单选属性
+				if(is_array($attr_values)){
+					//单选属性进入这里
+					foreach($attr_values as $k => $single_attr_value){
+						$data = [
+							'goods_id' => $goods_id,
+							'attr_id' => $attr_id,
+							'attr_value'=> $single_attr_value,
+							'attr_price'=> $goodsAttrPrice[$attr_id][$k],
+							'create_time' => time(),
+							'update_time' => time()
+						];
+						//进行入库操作
+						Db::name('goods_attr')->insert($data);
+					}
+				}else{
+					//唯一属性进入这里
+					$data = [
+						'goods_id' => $goods_id,
+						'attr_id' => $attr_id,
+						'attr_value' =>$attr_values,
+						'create_time' => time(),
+						'update_time' => time()
+					];
+					//进行入库操作
+					Db::name('goods_attr')->insert($data);
+				}
+			}
+		});
 	}
 
 	//处理原图的上传
