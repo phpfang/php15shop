@@ -1,6 +1,7 @@
 <?php 
 namespace app\admin\controller; //所在的命名空间
 use app\home\model\Order;
+use think\Db;
 class OrderController extends CommonController {
 
 	public function upd(){
@@ -65,6 +66,23 @@ class OrderController extends CommonController {
 			//使用file_get_content(url)模拟get请求
 			$url = "http://www.kuaidi100.com/applyurl?key={$key}&com={$company}&nu={$number}&show=0";
 			echo file_get_contents($url);
+		}
+	}
+
+	public function queryOrderGoods(){
+		if(request()->isAJax()){
+			$order_id = input('order_id');
+			$orderGoods = Db::name('order_goods')
+				->field("t2.goods_name,t2.goods_middle,t1.goods_price")
+				->alias('t1')
+				->join("sh_goods t2",'t1.goods_id = t2.goods_id','left')
+				->where("t1.order_id",$order_id)
+				->select();
+			foreach($orderGoods as $k=>$v){
+
+				$orderGoods[ $k ]['goods_middle'] = json_decode($v['goods_middle'])[0];
+			}
+			return json($orderGoods);
 		}
 	}
 

@@ -9,7 +9,7 @@
     <script type="text/javascript" src="{:config('admin_static')}/js/jquery.js"></script>
     <script type="text/javascript" src="/plugin/layer/layer.js"></script>
     <script type="text/javascript">
-        
+       
 
     </script>
     <script type="text/javascript">
@@ -65,6 +65,7 @@
                         <input name="" type="checkbox" value="" id="checkAll" />
                     </th>
                     <th>订单号</th>
+                    <th>订单商品</th>
                     <th>购买人</th>
                     <th>收货人/收货地址</th>
                     <th>电话/邮编</th>
@@ -161,6 +162,35 @@
                }
                $(".pagination").html(json.pagelist);
             },'json')
+        });
+
+        //ajax查看订单商品
+        $('tbody').on('click','.showOrderGoods',function(){
+            var order_id = $(this).attr('order_id');
+            var param = {"order_id":order_id};
+            $.get("{:url('admin/order/queryOrderGoods')}",param,function(json){
+                console.log(json);
+             
+               if(json){
+                    var html = "<div style='padding:10px'>";
+                    $.each(json,function(){
+                        html += "<div style='float:left'><img width='200px' src='/upload/"+this.goods_middle+"' /><br />商品名称："+this.goods_name+"-总价：￥"+this.goods_price+"</div>";
+                    });
+                        html += "</div>";
+                    //页面层
+                    layer.open({
+                      title:"订单所有商品信息",
+                      type: 1,
+                      shadeClose:true,
+                      skin: 'layui-layer-rim', //加上边框
+                      area: ['800px', '300px'], //宽高
+                      content: html
+                    });
+               }else{
+                    layer.msg('数据错误',{"icon":0,"time":100})
+               }
+
+            },'json');
         });
     </script>
 </body>
