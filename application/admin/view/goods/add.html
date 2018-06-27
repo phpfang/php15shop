@@ -194,6 +194,7 @@
             //把当前父元素（li）克隆一份，并且把其内部a标签的内容改为[-]
             var new_li = $(obj).parent().clone();
             new_li.find('a').html('[-]');
+            new_li.find('input,select').val('');
             //把new_li追加到当前元素父元素的后面
             $(obj).parent().after(new_li);
         }else{
@@ -217,6 +218,7 @@
             //把当前父元素（li）克隆一份，并且把其内部a标签的内容改为[-]
             var new_li = $(obj).parent().clone();
             new_li.find('a').html('[-]');
+            new_li.find('input,select').val('');
             //把new_li追加到当前元素父元素的后面
             $(obj).parent().after(new_li);
         }else{
