@@ -114,11 +114,11 @@
                 var reg = new  RegExp(keyword, 'g');
                //替换主体和分页页码数据
                //关键字为真我们才替换
-               if(keyword){
-                    $("tbody").html(json.tbody.replace(reg,"<span style='color:red;font-size:20px'>"+keyword+"</span>"));
-               }else{
+               //if(keyword){
+                 //   $("tbody").html(json.tbody.replace(reg,"<span style='color:red;font-size:20px'>"+keyword+"</span>"));
+              // }else{
                     $("tbody").html(json.tbody);
-               }
+              // }
                $("pagination").html(json.pagelist);
             },'json')
             return false;
@@ -152,14 +152,14 @@
             $.get("{:url('admin/order/index')}",{"keyword":keyword},function(json){
 
                //基于变量的正则只能使用new来创建
-               var reg = new  RegExp(keyword, 'g');
+               //var reg = new  RegExp(keyword, 'g');
                //替换主体和分页页码数据
                //关键字为真我们才替换
-               if(keyword){
-                    $("tbody").html(json.tbody.replace(reg,"<span style='color:red;font-size:20px'>"+keyword+"</span>"));
-               }else{
+               //if(keyword){
+                 //   $("tbody").html(json.tbody.replace(reg,"<span style='color:red;font-size:20px'>"+keyword+"</span>"));
+              // }else{
                     $("tbody").html(json.tbody);
-               }
+              // }
                $(".pagination").html(json.pagelist);
             },'json')
         });
